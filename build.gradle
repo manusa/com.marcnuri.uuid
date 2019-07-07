@@ -1,0 +1,35 @@
+plugins {
+	id 'org.springframework.boot' version '2.1.6.RELEASE'
+	id 'java'
+	id 'jacoco'
+}
+
+apply plugin: 'io.spring.dependency-management'
+
+group = 'com.marcnuri'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+ext {
+	mainClass = 'com.marcnuri.uuid.UuidApplication'
+}
+
+springBoot {
+	mainClassName = mainClass
+}
+
+bootJar {
+	manifest {
+		attributes 'Start-Class': mainClass
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
