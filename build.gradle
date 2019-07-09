@@ -33,3 +33,72 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
+
+def runProcess = { processCommand ->
+	def process = new ProcessBuilder(processCommand).start()
+	process.consumeProcessOutput(System.out, System.err)
+	process.waitFor()
+	return process
+}
+
+task('dockerBuild', dependsOn: [check, assemble]) {
+	group = 'docker'
+	description = 'Build docker image'
+	inputs.file "${buildDir}/libs/${bootJar.getArchiveFileName().getOrNull()}"
+	ext.buildNumber = { ->
+		java.util.Optional.ofNullable(System.getenv('TRAVIS_BUILD_NUMBER')).orElse(project.version)
+	}
+	ext.branch = { ->
+		java.util.Optional.ofNullable(System.getenv('TRAVIS_BRANCH')).orElse('LOCAL')
+	}
+	ext.tag = { ->
+		java.util.Optional.ofNullable(System.getenv('TRAVIS_TAG')).orElse('LOCAL')
+	}
+	ext.commit = { ->
+		java.util.Optional.ofNullable(System.getenv('TRAVIS_COMMIT')).orElse('LOCAL')
+	}
+	doLast() {
+		def dockerBuildCmd = [
+				'docker',
+				'build',
+				'--label', "TRAVIS_BUILD_NUMBER=${ext.buildNumber}".toString(),
+				'--label', "BRANCH=${ext.branch}".toString(),
+				'--label', "TAG=${ext.tag}".toString(),
+				'--label', "COMMIT=${ext.commit}".toString(),
+				'-t', 'marcnuri/com.marcnuri.uuid:latest',
+				'./'
+		]
+		def dockerBuild = runProcess(dockerBuildCmd)
+		if (dockerBuild.exitValue() != 0) {
+			throw new GradleScriptException(
+					"Docker build failed with code: ${dockerBuild.exitValue()}".toString(), null)
+		}
+		println "dockerize docker build task haas been run with exit value: ${dockerBuild.exitValue()}"
+	}
+}
+
+task('dockerPush', dependsOn: [dockerBuild]) {
+	group = 'docker'
+	description = 'Push docker image'
+	inputs.file "${buildDir}/libs/${bootJar.getArchiveFileName().getOrNull()}"
+
+	doLast() {
+		def dockerLogin = runProcess([
+				'docker',
+				'login',
+				'-u', java.util.Optional.of(System.getenv('DOCKER_HUB_USER')).get(),
+				'-p', java.util.Optional.of(System.getenv('DOCKER_HUB_PASSWORD')).get(),
+		])
+		if (dockerLogin.exitValue() != 0) {
+			throw new GradleScriptException('Error logging into Docker', null)
+		}
+		def dockerPush = runProcess([
+				'docker',
+				'push',
+				'marcnuri/com.marcnuri.uuid:latest',
+		])
+		if (dockerPush.exitValue() != 0) {
+			throw new GradleScriptException('Error pushing image to Docker Hub', null)
+		}
+	}
+}
