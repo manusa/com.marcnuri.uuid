@@ -6,7 +6,7 @@ jdk: openjdk11
 services:
 - docker
 script:
-- "./gradlew check assemble || travis_terminate 1"
+- "./gradlew check || travis_terminate 1"
 after_success:
 - "./gradlew dockerPush || travis_terminate 1"
 env:
