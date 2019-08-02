@@ -9,6 +9,12 @@ script:
 - "./gradlew check || travis_terminate 1"
 after_success:
 - "./gradlew dockerPush || travis_terminate 1"
+- sonar-scanner
+  addons:
+    sonarcloud:
+      organization: "manusa-github"
+      token:
+        secure: "A+16Ghd5nzMKagZTxsu4zmVaJHVqtbF6ZU7OVtWx2ZPDQHasNc56Ou9jpJnKBzClBOjRGI5mCiyZfzytbrbKpdMe6p+g5ku5UqpScBkWQL/wHZHlX8S1dgquLdzxeGiYczE6xO95jrWsoFBde/L0zAhw2ZPgSKQ/k6WQHH+6mxSGE3TSMr3m15yD9wj/IrG2Ux3c4J0T8pdoTo3jOqymPxD+ZfblridWPlgo3a5jEM2Sw5CVILqg/4+o40JMIqTsqBHnA5EuJCAj84X+VxY4UmpfJplExzCgW8mXpPAmLKgCP0Sz27QZEYu35nL8KK/mA+MQrwcD7XxPox3kijUuwFcHyz5k1BrZYXD+BSvRDU8WgDLve+NKsYvS8yIsBIwkd4aNDtoouvg0b2dZs4Sel6e5d/iS5stA2puLBi3QpTkLzopiyRwojJlCOh4eZkjYQ+spk/SxXd/LdcCyizDUO2de+z3JguczIlMi440Ei5rx6W5IlTclwJ00Ud/gyYfZHT41b0TMKNky/Hs/PNEY2pOQZX4ftzTjt8UW1wze6fvpan1396Jj02Bo77Ll/1fYhk4m+J3wOTLcSbpLl1mSuDHj0bZwjfb0FtAvKiHIdZJPS9sA7MqiGM7MDY/lLl/BH4HAIm9Ytn9NNuqdfQBfNtCwFzXFaH/h5Di29tozdWA="
 env:
   global:
   - secure: gzibFlAYpUmCnZIGBbjCrt3dCcohocVM1W1ODzob4K1kZxfbA4dYrZc336sF78/NDk8ydQzU7WBZwtZk7hEojoTRrGPAG2nT2SPZYolnYATz5ZyR1OiwY2bcXNuPMzJjeCPUwp8H9yKRHdiqIhZYR0yqblUu98/4MaeOKOuHMemn79s3qBUX3AV8FIv3Nqu74QWVisudAMdsoxRn9gvWC9KdYVJZzg5kixsgcftLEdbFIjA+awhsEiooseCwwgkPHjauPYMsrYVOp5a0oeDBgnWT/uJQ5+Rhbc0DUwRMbp8UcxCblqNhIVzgBQy7qjosOgmObDZpFzws2QZtSVFEfXv4lKRstKVb98oZq0AYxtfo4VPzA1zhTkCoq0maIMThm3Uoj8uANaT2kWs044jIMl4PSX0m0o/fUtXrRkkHkVlAZ8OYHkngc70k7nExYGzNy0zcH9qdGaSqd4KT2MIDDsc5A87Bo4D+FShOr+jdWAXjbFj9mhwHzgE+v/RbGOaQ1F+pgb5rEjlAI+TCorWEnRJf5lzpaufe6brB5KE63FxaJo+f/q1mOxkh/RKugaKUWNhIaS/OamJBku9LVjzx+42w+rDP/OyVHmrU7F3tqmoYoTLRltaAjFwdnR7jGvZZ9HZ3JoLDpeehqB6eGoHZb+THgxk6L1cujdCN+rr7Mo8=

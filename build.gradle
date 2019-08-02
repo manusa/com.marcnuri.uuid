@@ -5,6 +5,7 @@ plugins {
 }
 
 apply plugin: 'io.spring.dependency-management'
+apply plugin: 'jacoco'
 
 group = 'com.marcnuri'
 version = '0.0.1-SNAPSHOT'
@@ -100,5 +101,16 @@ task('dockerPush', dependsOn: [dockerBuild]) {
 		if (dockerPush.exitValue() != 0) {
 			throw new GradleScriptException('Error pushing image to Docker Hub', null)
 		}
+	}
+}
+
+test {
+	finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+	reports {
+		xml.enabled = true
+		html.enabled = true
 	}
 }
