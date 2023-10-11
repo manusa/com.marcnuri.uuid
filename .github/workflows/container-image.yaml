@@ -1,0 +1,23 @@
+name: Create Container Image
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build-container-image:
+    name: Build container image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Containerize
+        working-directory: go
+        run: |
+          docker build -t marcnuri/com.marcnuri.uuid:latest .
