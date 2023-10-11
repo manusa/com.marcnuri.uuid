@@ -13,3 +13,4 @@
 *.test
 *.out
 go.work
+vendor/
