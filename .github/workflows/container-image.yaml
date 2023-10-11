@@ -11,8 +11,8 @@ permissions:
   contents: read
 
 jobs:
-  build-container-image:
-    name: Build container image
+  build-push-container-image:
+    name: Build and push container image
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -21,3 +21,7 @@ jobs:
         working-directory: go
         run: |
           docker build -t marcnuri/com.marcnuri.uuid:latest .
+      - name: Push
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }} && \
+          docker push marcnuri/com.marcnuri.uuid:latest
