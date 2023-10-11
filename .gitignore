@@ -10,6 +10,7 @@
 /out/
 
 ### Go ###
+com.marcnuri.uuid
 *.test
 *.out
 go.work
